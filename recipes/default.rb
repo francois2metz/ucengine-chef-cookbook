@@ -21,7 +21,6 @@ else
   package "yaws"
 end
 
-
 directory tmp_dir do
   owner "root"
   mode 0755
@@ -35,6 +34,19 @@ bash "clone" do
     cd ucengine
     git checkout #{node[:ucengine][:branch]}
   EOH
+end
+
+directory node[:ucengine][:config][:log_dir] do
+  owner "root"
+  mode 0755
+  action :create
+end
+
+template "#{tmp_dir}/ucengine/rel/files/uce.cfg" do
+  source "uce.cfg.erb"
+  mode 0440
+  owner "root"
+  group "root"
 end
 
 execute "ucengine-build" do
